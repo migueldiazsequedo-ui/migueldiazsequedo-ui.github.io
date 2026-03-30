@@ -31,7 +31,7 @@ window.App = window.App || {};
         ...this.defaultCoords,
         name: this.defaultCity,
         isFallbackLocation: true,
-        message: 'La geolocalización no está disponible; se usa Madrid por defecto.'
+        message: 'La geolocalización no está disponible; se usa Basauri por defecto.'
       });
       return;
     }
@@ -87,7 +87,7 @@ window.App = window.App || {};
           ...this.defaultCoords,
           name: this.defaultCity,
           isFallbackLocation: true,
-          message: 'No se concedió permiso de ubicación; se usa Madrid por defecto.'
+          message: 'No se concedió permiso de ubicación; se usa Basauri por defecto.'
         });
       },
       { timeout: 5000, enableHighAccuracy: true }
