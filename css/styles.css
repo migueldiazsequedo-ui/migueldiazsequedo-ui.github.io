@@ -392,9 +392,10 @@ h3 {
 }
 
 .minerals-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(320px, 1fr));
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 340px)) !important;
   gap: 16px;
+  justify-content: start;
   margin-top: 18px;
 }
 
