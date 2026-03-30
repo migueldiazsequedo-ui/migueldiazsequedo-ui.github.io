@@ -95,6 +95,15 @@ window.App = window.App || {};
         renderChart(true);
         persistState();
       },
+      onFloatingCartClick: () => {
+        const portfolioSection = document.querySelector('.portfolio-panel');
+        if (portfolioSection) {
+          portfolioSection.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      },
       onChartMineralChange: (event) => {
         const mineralId = Number(event.target.value);
         if (!Number.isNaN(mineralId)) {
@@ -283,6 +292,7 @@ window.App = window.App || {};
     ui.renderTicker(state.minerals, converter);
     ui.renderCart(cart, state.minerals, converter, { onRemoveFromCart: removeFromCart });
     ui.renderSummary(state.minerals, cart, converter);
+    ui.updateFloatingCartCount(cart);
 
     if (updateChart) {
       renderChart();

@@ -35,6 +35,8 @@ window.App = window.App || {};
         modalBody: document.getElementById('modalBody'),
         modalTitle: document.getElementById('modalTitle'),
         chartMineralSelect: document.getElementById('chartMineralSelect'),
+        floatingCartBtn: document.getElementById('floatingCartBtn'),
+        floatingCartCount: document.getElementById('floatingCartCount'),
         modalCloseBtn: document.getElementById('modalCloseBtn')
       };
     }
@@ -90,6 +92,7 @@ window.App = window.App || {};
       this.elements.themeToggle.addEventListener('click', handlers.onThemeToggle);
       this.elements.modalCloseBtn.addEventListener('click', () => this.closeModal());
       this.elements.chartMineralSelect?.addEventListener('change', handlers.onChartMineralChange);
+      this.elements.floatingCartBtn?.addEventListener('click', handlers.onFloatingCartClick);
       this.elements.modalOverlay.addEventListener('click', (event) => {
         if (event.target === this.elements.modalOverlay) this.closeModal();
       });
@@ -283,6 +286,13 @@ window.App = window.App || {};
       this.elements.portfolioTimestamp.textContent = cart.lastUpdated
         ? `Actualizado: ${new Date(cart.lastUpdated).toLocaleString('es-ES')}`
         : 'Sin guardar';
+    }
+
+    updateFloatingCartCount(cart) {
+      if (!this.elements.floatingCartCount) return;
+
+      const totalItems = cart.items.reduce((sum, item) => sum + item.quantity, 0);
+      this.elements.floatingCartCount.textContent = String(totalItems);
     }
 
     renderSummary(minerals, cart, converter) {
