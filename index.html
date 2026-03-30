@@ -6,7 +6,7 @@
   <meta name="description" content="Dashboard frontend de trading de minerales con precios, clima, cartera y gráfico histórico." />
   <title>Mineral Trading Dashboard</title>
 
-  <link rel="icon" href="data:,">
+  <link rel="icon" href="data:," />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -23,9 +23,10 @@
 
       <div class="topbar-actions">
         <label class="currency-switcher">
+          <span>Divisa</span>
           <select id="currencySelect" aria-label="Seleccionar divisa">
             <option value="EUR">EUR (€)</option>
-            <option value="USD">USD ($)</option>            
+            <option value="USD">USD ($)</option>
             <option value="GBP">GBP (£)</option>
             <option value="JPY">JPY (¥)</option>
           </select>
@@ -43,134 +44,143 @@
     </section>
 
     <main class="dashboard-grid dashboard-grid--single">
-  <section class="main-column">
-    <section class="hero-grid">
-      <article class="hero-card summary-card glass-panel">
-        <div class="summary-header">
-          <div>
-            <p class="eyebrow">Mercado</p>
-            <h2>Resumen en tiempo real</h2>
+      <section class="main-column">
+        <section class="hero-grid">
+          <article class="hero-card summary-card glass-panel">
+            <div class="summary-header">
+              <div>
+                <p class="eyebrow">Mercado</p>
+                <h2>Resumen en tiempo real</h2>
+              </div>
+              <span id="lastUpdatedBadge" class="badge neutral">Sincronizando...</span>
+            </div>
+            <div id="summaryStats" class="summary-stats"></div>
+          </article>
+
+          <article class="hero-card weather-card glass-panel">
+            <div class="card-title-row">
+              <div>
+                <p class="eyebrow">Weather Widget</p>
+                <h2>Clima local</h2>
+              </div>
+              <button id="refreshWeatherBtn" class="ghost-btn" type="button">Actualizar</button>
+            </div>
+            <div id="weatherContent" class="weather-content loading-state">Cargando clima...</div>
+          </article>
+        </section>
+
+        <section class="market-stack">
+          <section class="chart-panel glass-panel">
+            <div class="card-title-row chart-header">
+              <div>
+                <p class="eyebrow">Analytics</p>
+                <h2 id="chartTitle">Tendencia histórica</h2>
+              </div>
+
+              <div class="chart-controls">
+                <label for="chartMineralSelect" class="chart-select-label">Metal</label>
+                <select id="chartMineralSelect" aria-label="Seleccionar metal del gráfico">
+                  <option value="">Selecciona un metal</option>
+                </select>
+                <span class="badge accent">Últimos 7 días</span>
+              </div>
+            </div>
+
+            <div class="chart-wrapper">
+              <canvas id="priceChart"></canvas>
+            </div>
+          </section>
+        </section>
+
+        <section class="filters-panel glass-panel">
+          <div class="card-title-row filters-headline">
+            <div>
+              <p class="eyebrow">Screening</p>
+              <h2>Filtros técnicos</h2>
+            </div>
+            <button id="resetFiltersBtn" class="ghost-btn" type="button">Limpiar filtros</button>
           </div>
-          <span id="lastUpdatedBadge" class="badge neutral">Sincronizando...</span>
-        </div>
-        <div id="summaryStats" class="summary-stats"></div>
-      </article>
 
-      <article class="hero-card weather-card glass-panel">
-        <div class="card-title-row">
-          <div>
-            <p class="eyebrow">Weather Widget</p>
-            <h2>Clima local</h2>
+          <div class="filters-grid">
+            <div class="filter-group predictive-group">
+              <label for="searchInput">Buscar mineral</label>
+              <input id="searchInput" type="text" placeholder="Ej. Oro, Cobre, Platino..." autocomplete="off" />
+              <div id="predictiveSuggestions" class="suggestions"></div>
+            </div>
+
+            <div class="filter-group">
+              <label for="mohsFilter">Dureza Mohs mínima</label>
+              <input id="mohsFilter" type="range" min="1" max="10" step="0.1" value="1" />
+              <span id="mohsValue">1.0</span>
+            </div>
+
+            <div class="filter-group">
+              <label for="crystalFilter">Sistema cristalino</label>
+              <select id="crystalFilter">
+                <option value="all">Todos</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label for="marketValueFilter">Valor de mercado</label>
+              <select id="marketValueFilter">
+                <option value="all">Todos</option>
+                <option value="premium">Premium (&gt; 1500)</option>
+                <option value="mid">Intermedio (500 - 1500)</option>
+                <option value="entry">Accesible (&lt; 500)</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label for="sortBy">Ordenar por</label>
+              <select id="sortBy">
+                <option value="name">Nombre</option>
+                <option value="priceDesc">Precio (alto a bajo)</option>
+                <option value="priceAsc">Precio (bajo a alto)</option>
+                <option value="hardnessDesc">Dureza (alta a baja)</option>
+              </select>
+            </div>
           </div>
-          <button id="refreshWeatherBtn" class="ghost-btn" type="button">Actualizar</button>
-        </div>
-        <div id="weatherContent" class="weather-content loading-state">Cargando clima...</div>
-      </article>
-    </section>
+        </section>
 
-    <section class="filters-panel glass-panel">
-      <div class="card-title-row filters-headline">
-        <div>
-          <p class="eyebrow">Screening</p>
-          <h2>Filtros técnicos</h2>
-        </div>
-        <button id="resetFiltersBtn" class="ghost-btn" type="button">Limpiar filtros</button>
-      </div>
+        <section class="minerals-panel glass-panel">
+          <div class="card-title-row">
+            <div>
+              <p class="eyebrow">Minerals Universe</p>
+              <h2>Minerales disponibles</h2>
+            </div>
+            <span id="resultsCounter" class="badge neutral">0 resultados</span>
+          </div>
 
-      <div class="filters-grid">
-        <div class="filter-group predictive-group">
-          <label for="searchInput">Buscar mineral</label>
-          <input id="searchInput" type="text" placeholder="Ej. Oro, Cobre, Platino..." autocomplete="off" />
-          <div id="predictiveSuggestions" class="suggestions"></div>
-        </div>
+          <div id="mineralsGrid" class="minerals-grid"></div>
+        </section>
 
-        <div class="filter-group">
-          <label for="mohsFilter">Dureza Mohs mínima</label>
-          <input id="mohsFilter" type="range" min="1" max="10" step="0.1" value="1" />
-          <span id="mohsValue">1.0</span>
-        </div>
+        <section class="portfolio-panel glass-panel portfolio-panel--bottom">
+          <div class="card-title-row">
+            <div>
+              <p class="eyebrow">Portfolio</p>
+              <h2>Cartera / carrito</h2>
+            </div>
+            <button id="clearCartBtn" class="ghost-btn danger-text" type="button">Vaciar</button>
+          </div>
 
-        <div class="filter-group">
-          <label for="crystalFilter">Sistema cristalino</label>
-          <select id="crystalFilter">
-            <option value="all">Todos</option>
-          </select>
-        </div>
+          <div id="cartItems" class="cart-items empty-state">
+            Aún no has añadido minerales a la cartera.
+          </div>
 
-        <div class="filter-group">
-          <label for="marketValueFilter">Valor de mercado</label>
-          <select id="marketValueFilter">
-            <option value="all">Todos</option>
-            <option value="premium">Premium (&gt; 1500)</option>
-            <option value="mid">Intermedio (500 - 1500)</option>
-            <option value="entry">Accesible (&lt; 500)</option>
-          </select>
-        </div>
-
-        <div class="filter-group">
-          <label for="sortBy">Ordenar por</label>
-          <select id="sortBy">
-            <option value="name">Nombre</option>
-            <option value="priceDesc">Precio (alto a bajo)</option>
-            <option value="priceAsc">Precio (bajo a alto)</option>
-            <option value="hardnessDesc">Dureza (alta a baja)</option>
-          </select>
-        </div>
-      </div>
-    </section>
-
-    <section class="market-stack">
-  <section class="chart-panel glass-panel">
-    <div class="card-title-row">
-      <div>
-        <p class="eyebrow">Analytics</p>
-        <h2 id="chartTitle">Tendencia histórica</h2>
-      </div>
-      <span class="badge accent">Últimos 7 días</span>
-    </div>
-    <div class="chart-wrapper">
-      <canvas id="priceChart"></canvas>
-    </div>
-  </section>
-
-  <section class="minerals-panel glass-panel">
-    <div class="card-title-row">
-      <div>
-        <p class="eyebrow">Minerals Universe</p>
-        <h2>Minerales disponibles</h2>
-      </div>
-      <span id="resultsCounter" class="badge neutral">0 resultados</span>
-    </div>
-    <div id="mineralsGrid" class="minerals-grid"></div>
-  </section>
-</section>
-
-    <section class="portfolio-panel glass-panel portfolio-panel--bottom">
-      <div class="card-title-row">
-        <div>
-          <p class="eyebrow">Portfolio</p>
-          <h2>Cartera / carrito</h2>
-        </div>
-        <button id="clearCartBtn" class="ghost-btn danger-text" type="button">Vaciar</button>
-      </div>
-
-      <div id="cartItems" class="cart-items empty-state">
-        Aún no has añadido minerales a la cartera.
-      </div>
-
-      <div class="totals-card">
-        <div class="totals-row"><span>Subtotal</span><strong id="subtotalValue">$0.00</strong></div>
-        <div class="totals-row"><span>Impuestos (21%)</span><strong id="taxValue">$0.00</strong></div>
-        <div class="totals-row"><span>Comisión</span><strong id="feeValue">$0.00</strong></div>
-        <div class="totals-row total"><span>Total</span><strong id="totalValue">$0.00</strong></div>
-        <div class="totals-meta">
-          <span id="feeTierBadge" class="badge neutral">Comisión 1%</span>
-          <span id="portfolioTimestamp">Sin guardar</span>
-        </div>
-      </div>
-    </section>
-  </section>
-</main>
+          <div class="totals-card">
+            <div class="totals-row"><span>Subtotal</span><strong id="subtotalValue">€0.00</strong></div>
+            <div class="totals-row"><span>Impuestos (21%)</span><strong id="taxValue">€0.00</strong></div>
+            <div class="totals-row"><span>Comisión</span><strong id="feeValue">€0.00</strong></div>
+            <div class="totals-row total"><span>Total</span><strong id="totalValue">€0.00</strong></div>
+            <div class="totals-meta">
+              <span id="feeTierBadge" class="badge neutral">Comisión 1%</span>
+              <span id="portfolioTimestamp">Sin guardar</span>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
   </div>
 
   <div id="modalOverlay" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
@@ -183,7 +193,6 @@
     </div>
   </div>
 
-  <script src="./js/config.js"></script>
   <script src="./js/data.js"></script>
   <script src="./js/models.js"></script>
   <script src="./js/storage.js"></script>
