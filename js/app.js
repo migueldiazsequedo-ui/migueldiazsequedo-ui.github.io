@@ -5,7 +5,9 @@ window.App = window.App || {};
     minerals: [],
     filteredMinerals: [],
     selectedMineralId: null,
-    theme: 'dark'
+    theme: 'dark',
+    chartRenderKey: '',
+    lastChartCurrency: 'EUR'
   };
 
   const storage = new app.StorageManager();
@@ -39,7 +41,7 @@ window.App = window.App || {};
         refreshWeather()
       ]).finally(() => {
         applyFilters();
-        renderAll();
+        renderAll({ updateChart: true });
       });
     } catch (error) {
       ui.openModal('Error de inicialización', error.message);
@@ -51,22 +53,22 @@ window.App = window.App || {};
       onSearchInput: () => {
         renderSuggestions();
         applyFilters();
-        renderAll();
+        renderAll({ updateChart: false });
       },
       onMohsChange: () => {
         ui.updateMohsLabel();
         applyFilters();
-        renderAll();
+        renderAll({ updateChart: false });
       },
       onFilterChange: () => {
         applyFilters();
-        renderAll();
+        renderAll({ updateChart: false });
       },
       onCurrencyChange: (event) => {
         converter.setSelectedCurrency(event.target.value);
         cart.setCurrency(event.target.value);
         persistState();
-        renderAll();
+        renderAll({ updateChart: true });
       },
       onWeatherRefresh: async () => {
         await refreshWeather();
@@ -74,25 +76,25 @@ window.App = window.App || {};
       onResetFilters: () => {
         ui.resetFilters();
         applyFilters();
-        renderAll();
+        renderAll({ updateChart: false });
       },
       onClearCart: () => {
         restoreFullStockFromCart();
         cart.clear();
         persistState();
-        renderAll();
+        renderAll({ updateChart: false });
       },
       onChartMineralChange: (event) => {
         const mineralId = Number(event.target.value);
         if (!Number.isNaN(mineralId)) {
           state.selectedMineralId = mineralId;
-          renderAll();
+          renderAll({ updateChart: true });
         }
       },
       onThemeToggle: () => {
         state.theme = state.theme === 'dark' ? 'light' : 'dark';
         ui.setTheme(state.theme);
-        renderChart();
+        renderChart(true);
         persistState();
       }
     });
@@ -251,7 +253,7 @@ window.App = window.App || {};
     });
   }
 
-  function renderAll() {
+  function renderAll({ updateChart = false } = {}) {
     ui.populateChartMineralSelect(state.minerals, state.selectedMineralId);
 
     ui.renderMinerals(state.filteredMinerals, converter, state.selectedMineralId, {
@@ -262,8 +264,11 @@ window.App = window.App || {};
     ui.renderTicker(state.minerals, converter);
     ui.renderCart(cart, state.minerals, converter, { onRemoveFromCart: removeFromCart });
     ui.renderSummary(state.minerals, cart, converter);
-    renderChart();
-}
+
+    if (updateChart) {
+      renderChart();
+    }
+  }
 
   function renderChart() {
     if (!chartManager) return;
@@ -287,6 +292,22 @@ window.App = window.App || {};
     ui.setChartMineralSelect(selectedMineral.id);
     chartManager.render(selectedMineral, converter);
   }
+
+  function shouldUpdateChart() {
+    const selectedMineral =
+      state.minerals.find((mineral) => mineral.id === state.selectedMineralId) || state.minerals[0];
+
+    if (!selectedMineral) return false;
+
+    const nextKey = `${selectedMineral.id}-${selectedMineral.currentPriceUSD}-${converter.selectedCurrency}-${state.theme}`;
+
+    if (state.chartRenderKey !== nextKey) {
+      state.chartRenderKey = nextKey;
+      return true;
+    }
+
+    return false;
+  }
   
   function addToCart(mineralId) {
     const mineral = state.minerals.find((item) => item.id === mineralId);
@@ -298,7 +319,7 @@ window.App = window.App || {};
       state.selectedMineralId = mineral.id;
       persistState();
       applyFilters();
-      renderAll();
+      renderAll({ updateChart: false });
     } catch (error) {
       ui.openModal('Stock insuficiente', error.message);
     }
@@ -314,14 +335,14 @@ window.App = window.App || {};
       mineral.restoreStock(removed);
       persistState();
       applyFilters();
-      renderAll();
+      renderAll({ updateChart: false });
     }
   }
 
   function selectMineral(mineralId) {
     state.selectedMineralId = mineralId;
-    renderAll();
-    
+    renderAll({ updateChart: true });
+
     const chartSection = document.querySelector('.chart-panel');
     if (chartSection) {
       chartSection.scrollIntoView({
