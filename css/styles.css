@@ -790,3 +790,42 @@ h3 {
     grid-template-columns: 1fr;
   }
 }
+
+/* ===== Selector de metal del gráfico ===== */
+
+.chart-header {
+  align-items: flex-start;
+}
+
+.chart-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.chart-select-label {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+#chartMineralSelect {
+  background: var(--color-panel-alt);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 10px 12px;
+  min-width: 220px;
+  outline: none;
+}
+
+@media (max-width: 840px) {
+  .chart-controls {
+    width: 100%;
+  }
+
+  #chartMineralSelect {
+    width: 100%;
+    min-width: 0;
+  }
+}
