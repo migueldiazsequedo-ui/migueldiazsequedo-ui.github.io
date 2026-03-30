@@ -23,9 +23,9 @@ window.App = window.App || {};
     defaultCity: 'Basauri',
     defaultCoords: { latitude: 43.2400, longitude: -2.8800 },
     taxRate: 0.21,
-    currencyApiKey: '64089c5c79d6033b34ab6b2db56a0e02',
-    metalApiKey: '38b91d4c6f65bdc7a0d5d18de017f839',
-    openCageApiKey: '55d4ce230a0b40b78af90e35e9d8c010',
+    currencyApiKey: window.APP_CONFIG?.currencyApiKey || "",
+    metalApiKey: window.APP_CONFIG?.metalApiKey || "",
+    openCageApiKey: window.APP_CONFIG?.openCageApiKey || "",
     supportedCurrencies: ['USD', 'EUR', 'GBP', 'JPY'],
     apiNotes: {
       currency: 'Si exchangerate.host te exige access_key, añade la clave en App.config.currencyApiKey.',
