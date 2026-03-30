@@ -34,6 +34,7 @@ window.App = window.App || {};
         modalOverlay: document.getElementById('modalOverlay'),
         modalBody: document.getElementById('modalBody'),
         modalTitle: document.getElementById('modalTitle'),
+        chartMineralSelect: document.getElementById('chartMineralSelect'),
         modalCloseBtn: document.getElementById('modalCloseBtn')
       };
     }
