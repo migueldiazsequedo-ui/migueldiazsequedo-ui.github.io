@@ -45,6 +45,21 @@ window.App = window.App || {};
         + values.map((value) => `<option value="${value}">${value}</option>`).join('');
     }
 
+    populateChartMineralSelect(minerals, selectedMineralId) {
+      if (!this.elements.chartMineralSelect) return;
+
+      this.elements.chartMineralSelect.innerHTML = minerals.map((mineral) => `
+        <option value="${mineral.id}" ${Number(selectedMineralId) === Number(mineral.id) ? 'selected' : ''}>
+          ${mineral.name} (${mineral.symbol})
+        </option>
+      `).join('');
+    }
+
+    setChartMineralSelect(mineralId) {
+      if (!this.elements.chartMineralSelect) return;
+      this.elements.chartMineralSelect.value = String(mineralId);
+    }
+
     setTheme(theme) {
       this.elements.body.dataset.theme = theme;
       const isDark = theme === 'dark';
@@ -74,6 +89,7 @@ window.App = window.App || {};
       this.elements.clearCartBtn.addEventListener('click', handlers.onClearCart);
       this.elements.themeToggle.addEventListener('click', handlers.onThemeToggle);
       this.elements.modalCloseBtn.addEventListener('click', () => this.closeModal());
+      this.elements.chartMineralSelect?.addEventListener('change', handlers.onChartMineralChange);
       this.elements.modalOverlay.addEventListener('click', (event) => {
         if (event.target === this.elements.modalOverlay) this.closeModal();
       });
