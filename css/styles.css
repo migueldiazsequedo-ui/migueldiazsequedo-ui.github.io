@@ -829,3 +829,26 @@ h3 {
     min-width: 0;
   }
 }
+
+/* ===== Logo / branding ===== */
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-text h1 {
+  font-size: 1.3rem;
+  margin: 0;
+}
+
+.brand-text .eyebrow {
+  margin-bottom: 2px;
+}
