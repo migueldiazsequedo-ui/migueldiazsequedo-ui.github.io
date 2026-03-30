@@ -82,6 +82,13 @@ window.App = window.App || {};
         persistState();
         renderAll();
       },
+      onChartMineralChange: (event) => {
+        const mineralId = Number(event.target.value);
+        if (!Number.isNaN(mineralId)) {
+          state.selectedMineralId = mineralId;
+          renderAll();
+        }
+      },
       onThemeToggle: () => {
         state.theme = state.theme === 'dark' ? 'light' : 'dark';
         ui.setTheme(state.theme);
@@ -245,6 +252,8 @@ window.App = window.App || {};
   }
 
   function renderAll() {
+    ui.populateChartMineralSelect(state.minerals, state.selectedMineralId);
+
     ui.renderMinerals(state.filteredMinerals, converter, state.selectedMineralId, {
       onAddToCart: addToCart,
       onSelectMineral: selectMineral
@@ -254,7 +263,7 @@ window.App = window.App || {};
     ui.renderCart(cart, state.minerals, converter, { onRemoveFromCart: removeFromCart });
     ui.renderSummary(state.minerals, cart, converter);
     renderChart();
-  }
+}
 
   function renderChart() {
     if (!chartManager) return;
@@ -274,6 +283,10 @@ window.App = window.App || {};
       );
     }
 
+    ui.updateChartTitle(selectedMineral);
+    ui.setChartMineralSelect(selectedMineral.id);
+    chartManager.render(selectedMineral, converter);
+  }
     ui.updateChartTitle(selectedMineral);
     chartManager.render(selectedMineral, converter);
   }
