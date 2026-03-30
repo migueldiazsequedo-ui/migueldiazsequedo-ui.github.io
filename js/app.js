@@ -287,10 +287,7 @@ window.App = window.App || {};
     ui.setChartMineralSelect(selectedMineral.id);
     chartManager.render(selectedMineral, converter);
   }
-    ui.updateChartTitle(selectedMineral);
-    chartManager.render(selectedMineral, converter);
-  }
-
+  
   function addToCart(mineralId) {
     const mineral = state.minerals.find((item) => item.id === mineralId);
     if (!mineral) return;
