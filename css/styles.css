@@ -420,7 +420,7 @@ h3 {
   width: 100%;
   height: 180px;
   object-fit: cover;
-  object-position: top-left;
+  object-position: top center;
 }
 
 .mineral-card__content {
